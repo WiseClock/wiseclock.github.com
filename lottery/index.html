@@ -1,0 +1,250 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8" />
+    <title></title>
+    <link rel="stylesheet" href="style/jquery-ui-1.9.0.custom.css" />
+    <link href="style/switchery.min.css" rel="stylesheet" />
+    <script src="http://code.jquery.com/jquery-2.1.0.min.js"></script>
+    <script src="http://code.jquery.com/ui/1.10.4/jquery-ui.min.js"></script>
+    <script src="js/switchery.min.js"></script>
+    <script src="js/jquery.nicescroll.js"></script>
+    <script>
+        $(function() {
+            $("#accordion").accordion({heightStyle: "content"});
+            $("#namelist").niceScroll({cursorcolor: "#aaa", cursorwidth: 7,
+                cursorborder: "5px solid transparent", cursorborderradius: 0});
+
+            // Textfields
+            $("#namelist").blur(function(event)
+            {
+                pushToList(splitList());
+            });
+
+            // Switches
+            $(".switchery").click(function(event)
+            {
+                pushToList(splitList());
+            });
+
+            // Buttons
+            $("#namelist_set").button().click(function(event)
+            {
+                $("#accordion").accordion("option", "active", 1);
+            });
+            $("#config_set").button().click(function(event)
+            {
+                $("#accordion").accordion("option", "active", 2);
+            });
+            $("#draw").button().click(function(event)
+            {
+                var li = [];
+                $("#namelist_final li").each(function(n, v)
+                {
+                    li.push($(this).text());
+                });
+                var size = li.length;
+                var rand = Math.floor((Math.random() * size) + 1); 
+                setDeceleratingTimeout(function()
+                {
+                    $("#result").text(li[rand - 1]);
+                    rand = (rand == size) ? 1 : rand + 1;
+                }, 10, 40);
+            });
+        });
+        function setDeceleratingTimeout(callback, factor, times)
+        {
+            var internalCallback = function(t, counter)
+            {
+                return function()
+                {
+                    if (--t > 0)
+                    {
+                        window.setTimeout(internalCallback, ++counter * factor);
+                        callback();
+                    }
+                }
+            }(times, 0);
+          window.setTimeout(internalCallback, factor);
+        };
+        function pushToList(list)
+        {
+            var nList = $("#namelist_final");
+            nList.text("");
+            $.each(list, function(i)
+            {
+                var li = $('<li/>').text(list[i]);
+                li.addClass("ui-menu-item")
+                .addClass("ui-widget")
+                .addClass("ui-state-default")
+                .addClass("ui-button-text-only")
+                .addClass("ui-corner-all")
+                .addClass("ui-widget-content")
+                .addClass("jqueryUiTagItem");
+                li.click(function(event)
+                {
+                    $(this).remove();
+                });
+                li.appendTo(nList);
+            });
+        }
+        function splitList()
+        {
+            var list = $("#namelist").val().trim().split(/[ ,，、\s]+/);
+            if ($("#cfg_randomize").is(":checked"))
+            {
+                list.sort(function()
+                {
+                    return .5 - Math.random();
+                });
+            }
+            if ($("#cfg_deletedup").is(":checked"))
+            {
+                var uniqueList = [];
+                $.each (list, function(i, el)
+                {
+                    if ($.inArray(el, uniqueList) === -1) uniqueList.push(el);
+                });
+                list = uniqueList;
+            }
+            return list;
+        }
+    </script>
+    <style>
+        *
+        {
+            font-family: "微软雅黑";
+        }
+        body
+        {
+            width: 800px;
+            margin: auto;
+        }
+        #namelist
+        {
+            width: 95%;
+            margin: auto;
+            display: block;
+            margin-bottom: 10px;
+        }
+        #namelist_set, #config_set, #draw
+        {
+            margin: auto;
+            display: block;
+        }
+        #configs
+        {
+            width: 400px;
+            height: 30px;
+            margin: auto;
+        }
+        #configs li
+        {
+            float: left;
+            list-style: none;
+            display: block;
+            width: 200px;
+        }
+        #namelist_final
+        {
+            clear: both;
+            display: block;
+        }
+        #namelist_final li
+        {
+            list-style: none;
+            display: block;
+            float: left;
+            padding: 0 20px 3px 10px;
+            margin: 5px;
+            position: relative;
+            cursor: default;
+        }
+        #namelist_final li:after
+        {
+            content: "\A";
+            width: 16px;
+            height: 16px;
+            background-image: url(style/images/icons-dark.png);
+            background-position: -80px -128px;
+            position: absolute;
+            right: 0;
+            top: 0;
+        }
+        #namelist_final li:hover:after
+        {
+            background-position: -96px -128px;
+        }
+        button
+        {
+            clear: both;
+        }
+        #result
+        {
+            background-color: rgba(0, 0, 0, 0.05);
+            border-radius: 10px;
+            margin: 10px;
+            line-height: 60px;
+            height: 60px;
+            text-align: center;
+            font-size: 50px;
+        }
+        footer p
+        {
+            line-height: 12px;
+            font-size: 12px;
+            height: 12px;
+            margin: 3px 0 0 0;
+            text-align: right;
+        }
+    </style>
+</head>
+<body>
+    <h1>贏不到™抽奖系统</h1>
+    <div id="accordion">
+        <h3>输入</h3>
+        <div>
+            <p>
+                <textarea name="namelist" id="namelist" cols="30" rows="10"></textarea>
+                <button id="namelist_set">下一步</button>
+            </p>
+        </div>
+        <h3>设置</h3>
+        <div>
+            <ul id="configs">
+                <li>
+                    去除重复：<input type="checkbox" class="js-switch" name="cfg_deletedup" id="cfg_deletedup" checked />
+                </li>
+                <li>
+                    随机顺序：<input type="checkbox" class="js-switch" name="cfg_randomize" id="cfg_randomize" checked />
+                </li>
+            </ul>
+            <p>
+                <ul id="namelist_final">
+                </ul>
+                <button id="config_set">下一步</button>
+            </p>
+        </div>
+        <h3>抽奖</h3>
+        <div>
+            <div id="result"></div>
+            <button id="draw">抽奖</button>
+        </div>
+    </div>
+    <script type="text/javascript">
+        var elems = Array.prototype.slice.call(document.querySelectorAll(".js-switch"));
+        elems.forEach(function(html)
+        {
+            var switchery = new Switchery(html, {color: "#9d998b"});
+        });
+    </script>
+    <footer>
+         <p>
+            Copyright © 2014 <strong>WiseClock</strong>
+         </p>
+         <p>
+            <sup>rev 2014.01.26.0452</sup>
+         </p>
+    </footer>
+</body>
+</html>
