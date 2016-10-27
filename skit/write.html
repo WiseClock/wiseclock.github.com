@@ -37,14 +37,19 @@
 
         <div class="form-group">
             <div class="row">
-                <div class="form-group col-md-8 col-sm-12">
+                <div class="form-group col-md-7 col-sm-12">
                     <button type="button" class="btn btn-info btn-xs" id="tscene">场景</button>
                     <button type="button" class="btn btn-success btn-xs" id="temotion">角色情感</button>
                     <button type="button" class="btn btn-danger btn-xs" id="thint">表演提醒</button>
                     <button type="button" class="btn btn-default btn-xs" id="tcomment">注释</button>
                 </div>
-                <div class="form-group col-md-4 col-sm-12">
-                    <button type="button" class="btn btn-primary btn-block" id="generate">生成</button>
+                <div class="form-group col-md-2 hidden-sm hidden-xs">
+                    <label id="import" class="btn btn-default btn-block">
+                        读取&hellip; <input type="file" />
+                    </label>
+                </div>
+                <div class="form-group col-md-3 col-sm-12">
+                    <button type="button" class="btn btn-primary btn-block" id="generate">排版美化</button>
                 </div>
             </div>
         </div>
@@ -61,7 +66,7 @@
 
     <footer class="footer">
         <div class="container">
-            <p class="text-muted">version 0.9.0</p>
+            <p class="text-muted">version 0.9.1</p>
             <p class="text-muted">© Copyright 2016 <a href="http://wiseclock.ca" target="_blank">木是伊</a></p>
         </div>
     </footer>

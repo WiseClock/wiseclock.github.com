@@ -1,5 +1,7 @@
 $(function()
 {
+    $('#import').on('change', ':file', readSingleFile);
+
     $('#generate').click(function(event)
     {
         generate();
@@ -34,6 +36,26 @@ $(function()
         toggleColor(hash, $('.' + hash + '_b'));
     });
 });
+
+function readSingleFile(event)
+{
+    var f = event.target.files[0]; 
+
+    if (f)
+    {
+        var r = new FileReader();
+        r.onload = function(e)
+        { 
+            var contents = e.target.result;
+            $('#skit').val(contents);
+        }
+        r.readAsText(f);
+    }
+    else
+    { 
+        alert("读取文件错误！");
+    }
+}
 
 function toggleColor(hash, btn)
 {
