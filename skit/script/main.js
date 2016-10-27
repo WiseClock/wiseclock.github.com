@@ -180,11 +180,11 @@ function splitNameAndSpeech(line)
 
 function buildKeyWords(speech)
 {
-    speech = speech.replace(/[\[［]([^\]］]*)[\]］]/g, '<span class="label label-info">$1</span>');
-    speech = speech.replace(/[\(（]([^\)）]*)[\)）]/g, '<span class="label label-success">$1</span>');
-    speech = speech.replace(/【([^】]*)】/g, '<span class="label label-danger">$1</span>');
-    speech = speech.replace(/[\{｛]([^\}｝]*)[\}｝]/g, '<span class="label label-default">$1</span>');
-    return speech;
+    speech = speech.replace(/[\[［]([^\]］]*)[\]］]/g, '</span><span class="label label-info">$1</span><span>');
+    speech = speech.replace(/[\(（]([^\)）]*)[\)）]/g, '</span><span class="label label-success">$1</span><span>');
+    speech = speech.replace(/【([^】]*)】/g, '</span><span class="label label-danger">$1</span><span>');
+    speech = speech.replace(/[\{｛]([^\}｝]*)[\}｝]/g, '</span><span class="label label-default">$1</span><span>');
+    return ('<span>' + speech + '</span>').replace(/\<span\>\<\/span\>/g, '');
 }
 
 function buildNamesHTML(nameList)

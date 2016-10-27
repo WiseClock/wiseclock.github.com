@@ -42,6 +42,7 @@ body
 {
     background-color: #f5dccf;
     color: #c4551b;
+    border-radius: 0;
 }
 
 #nameBox .btn:hover
@@ -88,6 +89,10 @@ body
 {
     margin: 0 5px;
     font-weight: normal;
+}
+#result .label + .label, #result .label:first-child
+{
+    margin-left: 0;
 }
 
 #import input
