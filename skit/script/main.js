@@ -153,6 +153,11 @@ function generate()
     });
     $('#nameList').html(buildNamesHTML(nameList));
     $('#result').html(htmlBuilder);
+
+    $('.jtextfill').each(function(index, el)
+    {
+        $(this).textfill({ maxFontPixels: 16 });
+    });
 }
 
 function splitNameAndSpeech(line)
@@ -199,9 +204,9 @@ function buildLineHTML(number, name, speech)
     if (name == '')
         hash = 'other';
     var line = '<div class="row line"><div class="cover ' + hash + '"></div>';
-    line += '<div class="col-xs-2  col-sm-1">#' + number + '</div>';
-    line += '<div class="col-xs-10 col-sm-2 col-md-1"><span class="name" data-hash="' + hash + '">' + name + '</span></div>';
-    line += '<div class="col-xs-12 col-sm-9 col-md-10">' + speech + '</div>';
+    line += '<div class="jtextcheck col-xs-2  col-sm-1 col-md-1 col-print-1">#' + number + '</div>';
+    line += '<div class="jtextfill col-xs-10 col-sm-2 col-md-2 col-print-2"><span class="name" data-hash="' + hash + '">' + name + '</span></div>';
+    line += '<div class="col-xs-12 col-sm-9 col-md-9 col-print-9">' + speech + '</div>';
     line += '</div>\n';
     return line;
 }
@@ -276,3 +281,21 @@ jQuery.fn.extend({
         }
     }
 });
+
+(function($) {
+    $.fn.textfill = function(options) {
+        var fontSize = options.maxFontPixels;
+        var ourText = $('span:visible:first', this);
+        var maxHeight = $('.jtextcheck:first').height();
+        var maxWidth = $(this).width();
+        var textHeight;
+        var textWidth;
+        do {
+            ourText.css('font-size', fontSize + 'px');
+            textHeight = ourText.height();
+            textWidth = ourText.width();
+            fontSize = fontSize - 1;
+        } while ((textHeight > maxHeight || textWidth > maxWidth) && fontSize > 9);
+        return this;
+    }
+})(jQuery);
