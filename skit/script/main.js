@@ -125,7 +125,11 @@ function generate()
         htmlBuilder += buildLineHTML(counter, name, speech);
     }
 
-    $('#nameList').html(buildNamesHTML($.unique(nameList)));
+    nameList = nameList.filter(function(item, pos)
+    {
+        return nameList.indexOf(item) == pos;
+    });
+    $('#nameList').html(buildNamesHTML(nameList));
     $('#result').html(htmlBuilder);
 }
 
@@ -173,9 +177,9 @@ function buildLineHTML(number, name, speech)
     if (name == '')
         hash = 'other';
     var line = '<div class="row line"><div class="cover ' + hash + '"></div>';
-    line += '<div class="col-sm-1 col-xs-1">#' + number + '</div>';
-    line += '<div class="col-sm-2 col-md-1 col-xs-11"><span class="name" data-hash="' + hash + '">' + name + '</span></div>';
-    line += '<div class="col-sm-9 col-md-10 col-xs-12">' + speech + '</div>';
+    line += '<div class="col-xs-2  col-sm-1">#' + number + '</div>';
+    line += '<div class="col-xs-10 col-sm-2 col-md-1"><span class="name" data-hash="' + hash + '">' + name + '</span></div>';
+    line += '<div class="col-xs-12 col-sm-9 col-md-10">' + speech + '</div>';
     line += '</div>\n';
     return line;
 }
