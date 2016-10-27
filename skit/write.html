@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<head>
+    <meta charset="UTF-8">
+    <title>剧本工具</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
+    <script src="https://code.jquery.com/jquery-3.1.1.min.js"></script>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+    <link rel="stylesheet" href="style/bootstrap.min.css">
+    <link rel="stylesheet" href="style/main.css">
+</head>
+<body>
+
+    <nav class="navbar navbar-default navbar-static-top">
+        <div class="container">
+            <div class="navbar-header">
+                <a class="navbar-brand" href=".">剧本工具</a>
+            </div>
+            <div id="navbar" class="navbar-collapse collapse">
+                <ul class="nav navbar-nav">
+                    <li><a href="index.html">介绍</a></li>
+                    <li class="active"><a href="#">创作</a></li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+
+    <div class="container">
+
+        <div class="form-group">
+            <div class="row">
+                <div class="col-md-12">
+                    <label for="skit">剧本：</label>
+                    <textarea class="form-control" rows="10" id="skit" placeholder="[解说员木是伊入场]
+木是伊：(开心)这个就是剧本工具啦。
+[观众登场]
+观众：【蹦出来大喊】可是要怎么用啊？
+{观众需要一丝不挂}
+木是伊：(鄙夷)你谁啊……
+观众：我是你的忠实粉丝呀！
+[观众离场]
+木是伊：【闭眼解说】(一本正经)其实你就照着这段文字自己创作就好啦……
+木是伊：【睁眼】(震惊)咦……人呢？"></textarea>
+                </div>
+            </div>
+        </div>
+
+        <div class="form-group">
+            <div class="row">
+                <div class="form-group col-md-8 col-sm-12">
+                    <button type="button" class="btn btn-info btn-xs" id="tscene">场景</button>
+                    <button type="button" class="btn btn-success btn-xs" id="temotion">角色情感</button>
+                    <button type="button" class="btn btn-danger btn-xs" id="thint">表演提醒</button>
+                    <button type="button" class="btn btn-default btn-xs" id="tcomment">注释</button>
+                </div>
+                <div class="form-group col-md-4 col-sm-12">
+                    <button type="button" class="btn btn-primary btn-block" id="generate">生成</button>
+                </div>
+            </div>
+        </div>
+
+        <div id="nameBox" class="form-group">
+            <div id="nameList" class="btn-group" role="group">
+            </div>
+        </div>
+
+        <div id="result">
+        </div>
+
+    </div>
+
+    <footer class="footer">
+        <div class="container">
+            <p class="text-muted">version 0.9.0</p>
+            <p class="text-muted">© Copyright 2016 <a href="http://wiseclock.ca" target="_blank">木是伊</a></p>
+        </div>
+    </footer>
+
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+    <script src="script/main.js"></script>
+</body>
+</html>
