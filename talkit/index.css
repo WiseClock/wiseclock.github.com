@@ -203,6 +203,7 @@ Node styles
     color: #fff;
     width: 230px;
     height: 85px;
+    resize: none;
 }
 
 .node .label

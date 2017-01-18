@@ -1203,11 +1203,11 @@ $('#paper').contextmenu(
         { text: '成就', alias: '1-6', action: add(joint.shapes.dialogue.Achievement) },
         { text: '头衔', alias: '1-7', action: add(joint.shapes.dialogue.Honor) },
         { type: 'splitLine' },
-        { text: '保存', alias: '2-1', action: save },
-        { text: '读取', alias: '2-2', action: load },
-        { text: '导入', id: 'import', alias: '2-3', action: importFile },
-        { text: '新建', alias: '2-4', action: clear },
-        { text: '导出', id: 'export', alias: '2-5', action: exportFile },
+        // { text: '保存', alias: '2-1', action: save },
+        // { text: '读取', alias: '2-2', action: load },
+        { text: '导入Talkit文件', id: 'import', alias: '2-3', action: importFile },
+        // { text: '新建', alias: '2-4', action: clear },
+        { text: '导出Talkit文件', id: 'export', alias: '2-5', action: exportFile },
         { text: '导出游戏文件', id: 'export-game', alias: '2-6', action: exportGameFile },
     ]
 });
