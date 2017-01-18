@@ -1035,7 +1035,7 @@ var paper = new joint.dia.Paper(
     // Enable link snapping within 75px lookup radius
     snapLinks: { radius: 75 },
     interactive: {
-        vertexAdd: false
+        //vertexAdd: false
     }
 
 });

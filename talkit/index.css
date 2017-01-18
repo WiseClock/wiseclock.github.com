@@ -341,13 +341,13 @@ span
     background-color: #000;
 }
 
-.joint-link .link-tools
+.joint-link .link-tools, .joint-link .marker-vertices
 {
     opacity: 0;
     transition: .5s;
 }
 
-.joint-link:hover .link-tools
+.joint-link:hover .link-tools, .joint-link:hover .marker-vertices
 {
     opacity: 1;
 }
