@@ -82,14 +82,18 @@ function validateConnection(cellViewS, magnetS, cellViewT, magnetT, end, linkVie
         return false;
 
     var links = graph.getConnectedLinks(cellViewS.model);
-    for (var i = 0; i < links.length - 1; i++)
+    for (var i = 0; i < links.length; i++)
     {
       var link = links[i];
-      if (link.attributes.source.id === cellViewS.model.id && link.attributes.source.port === magnetS.attributes.port.nodeValue && link.attributes.target.id)
+      if (link.attributes.source.id === cellViewS.model.id
+        && link.attributes.source.port === magnetS.attributes.port.nodeValue
+        && link.attributes.target.id)
       {
+        if (link.cid == linkView.model.cid)
+            continue;
           var targetCell = graph.getCell(link.attributes.target.id);
-          if (targetCell.attributes.type !== targetType)
-              return false; // We can only connect to multiple targets of the same type
+          //if (targetCell.attributes.type !== targetType)
+              //return false; // We can only connect to multiple targets of the same type
           if (targetCell == cellViewT.model)
               return false; // Already connected
       } 
