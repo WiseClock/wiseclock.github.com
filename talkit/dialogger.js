@@ -803,8 +803,7 @@ function gameData()
                 
             }
 
-            else if (node.type == 'Choice') {
-                node.name = cell.name;
+            else if (node.type == 'Choice' || node.type == 'Honor') {
                 node.title = cell.title;
                 node.next = null;
 
