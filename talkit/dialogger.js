@@ -601,7 +601,6 @@ joint.shapes.dialogue.Choice = joint.shapes.devs.Model.extend(
             inPorts: ['input'],
             outPorts: ['output'],
             title: '',
-            name: '',
         },
         joint.shapes.dialogue.Base.prototype.defaults
     ),
