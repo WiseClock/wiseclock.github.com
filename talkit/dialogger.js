@@ -580,7 +580,6 @@ joint.shapes.dialogue.Honor = joint.shapes.devs.Model.extend(
             inPorts: ['input'],
             outPorts: ['output'],
             title: '',
-            textarea: 'Start writing',
         },
         joint.shapes.dialogue.Base.prototype.defaults
     ),
