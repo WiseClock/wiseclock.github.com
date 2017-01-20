@@ -914,7 +914,8 @@ function promptFilename(callback)
 
 function applyTextFields()
 {
-    $('input[type=text]').blur();
+    $('input').blur();
+    $('textarea').blur();
 }
 
 function save()
