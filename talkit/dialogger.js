@@ -40,12 +40,28 @@ var allowableConnections =
     ['dialogue.Choice', 'dialogue.Text'],
     ['dialogue.Choice', 'dialogue.Honor'],
     ['dialogue.Choice', 'dialogue.Achievement'],
+    ['dialogue.Choice', 'dialogue.Set'],
+    ['dialogue.Choice', 'dialogue.Branch'],
     ['dialogue.Achievement', 'dialogue.Achievement'],
     ['dialogue.Achievement', 'dialogue.Honor'],
     ['dialogue.Achievement', 'dialogue.Text'],
+    ['dialogue.Achievement', 'dialogue.Set'],
+    ['dialogue.Achievement', 'dialogue.Branch'],
     ['dialogue.Honor', 'dialogue.Achievement'],
     ['dialogue.Honor', 'dialogue.Honor'],
     ['dialogue.Honor', 'dialogue.Text'],
+    ['dialogue.Honor', 'dialogue.Set'],
+    ['dialogue.Honor', 'dialogue.Branch'],
+    ['dialogue.Branch', 'dialogue.Text'],
+    ['dialogue.Branch', 'dialogue.Set'],
+    ['dialogue.Branch', 'dialogue.Branch'],
+    ['dialogue.Branch', 'dialogue.Achievement'],
+    ['dialogue.Branch', 'dialogue.Honor'],
+    ['dialogue.Set', 'dialogue.Text'],
+    ['dialogue.Set', 'dialogue.Achievement'],
+    ['dialogue.Set', 'dialogue.Honor'],
+    ['dialogue.Set', 'dialogue.Set'],
+    ['dialogue.Set', 'dialogue.Branch'],
 ];
 
 
@@ -242,7 +258,7 @@ joint.shapes.dialogue.BaseView = joint.shapes.devs.ModelView.extend(
         var label = this.$box.find('.label');
         var type = this.model.get('type').slice('dialogue.'.length);
         var typeString = type.replace('Branch', '分支').replace('Text', '文本')
-                            .replace('Node', '节点').replace('Set', '设置');
+                            .replace('Node', '节点').replace('Set', '变量');
         label.text(typeString);
         label.attr('class', 'label ' + type);
         //this.$box.css({ width: bbox.width, height: bbox.height, left: bbox.x, top: bbox.y, transform: 'rotate(' + (this.model.get('angle') || 0) + 'deg)' });
@@ -575,7 +591,7 @@ joint.shapes.dialogue.Honor = joint.shapes.devs.Model.extend(
     defaults: joint.util.deepSupplement
     (
         {
-            size: { width: 250, height: 40 },
+            size: { width: 250, height: 45 },
             type: 'dialogue.Honor',
             inPorts: ['input'],
             outPorts: ['output'],
@@ -595,7 +611,7 @@ joint.shapes.dialogue.Choice = joint.shapes.devs.Model.extend(
     defaults: joint.util.deepSupplement
     (
         {
-            size: { width: 250, height: 40 },
+            size: { width: 250, height: 45 },
             type: 'dialogue.Choice',
             inPorts: ['input'],
             outPorts: ['output'],
@@ -616,7 +632,7 @@ joint.shapes.dialogue.Branch = joint.shapes.devs.Model.extend(
     (
         {
             type: 'dialogue.Branch',
-            size: { width: 200, height: 100, },
+            size: { width: 200, height: 70, },
             inPorts: ['input'],
             outPorts: ['output0'],
             values: [],
@@ -633,7 +649,7 @@ joint.shapes.dialogue.BranchView = joint.shapes.dialogue.BaseView.extend(
         '<button class="delete">x</button>',
         '<button class="add">+</button>',
         '<button class="remove">-</button>',
-        '<input type="text" class="name" placeholder="变量" />',
+        '<input type="variable" class="name" placeholder="变量" />',
         '<input type="text" value="Default" readonly/>',
         '</div>',
     ].join(''),
@@ -713,7 +729,7 @@ joint.shapes.dialogue.BranchView = joint.shapes.dialogue.BaseView.extend(
     {
         var textField = this.$box.find('input.name');
         var height = textField.outerHeight(true);
-        this.model.set('size', { width: 200, height: 100 + Math.max(0, (this.model.get('outPorts').length - 1) * height) });
+        this.model.set('size', { width: 200, height: 70 + Math.max(0, (this.model.get('outPorts').length - 1) * height) });
     },
 });
 
@@ -728,7 +744,7 @@ joint.shapes.dialogue.Set = joint.shapes.devs.Model.extend(
             type: 'dialogue.Set',
             inPorts: ['input'],
             outPorts: ['output'],
-            size: { width: 200, height: 100, },
+            size: { width: 200, height: 70, },
             value: '',
         },
         joint.shapes.dialogue.Base.prototype.defaults
@@ -742,7 +758,7 @@ joint.shapes.dialogue.SetView = joint.shapes.dialogue.BaseView.extend(
         '<div class="node">',
         '<span class="label"></span>',
         '<button class="delete">x</button>',
-        '<input type="text" class="name" placeholder="变量" />',
+        '<input type="variable_set" class="name" placeholder="变量" />',
         '<input type="text" class="value" placeholder="值" />',
         '</div>',
     ].join(''),
@@ -971,6 +987,8 @@ function load()
 
 function exportFile()
 {
+    if (!checkGraph())
+        return;
     if (!fs)
     {
         applyTextFields();
@@ -985,11 +1003,17 @@ function gameFilenameFromNormalFilename(f)
 
 function exportGameFile()
 {
+    if (!checkGraph())
+        return;
     if (!fs)
     {
         applyTextFields();
         offerDownload(gameFilenameFromNormalFilename(filename ? filename : defaultFilename), gameData());
     }
+    var sourceCellId = graph.getSources()[0].id;
+    var firstCellId = graph.getFirstCell().id;
+    if (sourceCellId != firstCellId)
+        prompt("请复制起始卡片ID：", sourceCellId);
 }
 
 function importFile()
@@ -1016,6 +1040,80 @@ function clear()
 {
     graph.clear();
     filename = null;
+}
+
+function checkGraph()
+{
+    var allElements = graph.getElements();
+    if (allElements.length == 0)
+    {
+        alert("白纸一张_(:з」∠)_");
+        return false;
+    }
+    if (allElements.length == 1)
+    {
+        alert("就一张卡啊？");
+        return false;
+    }
+    var sourceElements = graph.getSources();
+    if (sourceElements.length > 1)
+    {
+        alert("故事有多个起始点……");
+        return false;
+    }
+    if (graph.getSinks().length == 0)
+    {
+        alert("故事是个死循环……");
+        return false;
+    }
+    if (sourceElements[0].attributes.type != 'dialogue.Text')
+    {
+        alert("故事线的起点不是文本");
+        return false;
+    }
+    var result = true;
+    $.each(allElements, function(index, val)
+    {
+        var connectedLinks = graph.getConnectedLinks(val, { outbound: true });
+        if (val.attributes.type != 'dialogue.Text' && connectedLinks.length == 0)
+        {
+            alert("有故事线的结尾不是文本");
+            result = false;
+            return false;
+        }
+        $.each(connectedLinks, function(index, val)
+        {
+            if (val.attributes.target.id === undefined)
+            {
+                alert("有卡片连出了线路但没有接到另一块卡片上……");
+                result = false;
+                return false;
+            }
+        });
+        if (val.attributes.type == 'dialogue.Branch')
+        {
+            var foundOutput0 = false;
+            $.each(connectedLinks, function(index, val)
+            {
+                if (val.attributes.source.port == 'output0')
+                {
+                    foundOutput0 = true;
+                    return false; // break
+                }
+            });
+            if (!foundOutput0)
+            {
+                alert("有分支的默认（Default）线路没有设置");
+                result = false;
+                return false;
+            }
+            if (val.attributes.outPorts.length != connectedLinks.length)
+            {
+                alert("提示：有分支的值没有连出线路");
+            }
+        }
+    });
+    return result;
 }
 
 // Browser stuff
@@ -1199,8 +1297,8 @@ $('#paper').contextmenu(
     [
         { text: '文本', alias: '1-1', action: add(joint.shapes.dialogue.Text) },
         { text: '选项', alias: '1-2', action: add(joint.shapes.dialogue.Choice) },
-        // { text: '分支', alias: '1-3', action: add(joint.shapes.dialogue.Branch) },
-        // { text: '设置', alias: '1-4', action: add(joint.shapes.dialogue.Set) },
+        { text: '分支', alias: '1-3', action: add(joint.shapes.dialogue.Branch) },
+        { text: '变量', alias: '1-4', action: add(joint.shapes.dialogue.Set) },
         // { text: '节点', alias: '1-5', action: add(joint.shapes.dialogue.Node) },
         { text: '成就', alias: '1-6', action: add(joint.shapes.dialogue.Achievement) },
         { text: '头衔', alias: '1-7', action: add(joint.shapes.dialogue.Honor) },
