@@ -37,6 +37,7 @@ defaultLink.set('smooth', true);
 var allowableConnections =
 [
     ['dialogue.Text', 'dialogue.Choice'],
+    // ['dialogue.Text', 'dialogue.Branch'],
     ['dialogue.Choice', 'dialogue.Text'],
     ['dialogue.Choice', 'dialogue.Honor'],
     ['dialogue.Choice', 'dialogue.Achievement'],
@@ -57,6 +58,7 @@ var allowableConnections =
     ['dialogue.Branch', 'dialogue.Branch'],
     ['dialogue.Branch', 'dialogue.Achievement'],
     ['dialogue.Branch', 'dialogue.Honor'],
+    // ['dialogue.Branch', 'dialogue.Choice'],
     ['dialogue.Set', 'dialogue.Text'],
     ['dialogue.Set', 'dialogue.Achievement'],
     ['dialogue.Set', 'dialogue.Honor'],
@@ -108,12 +110,61 @@ function validateConnection(cellViewS, magnetS, cellViewT, magnetT, end, linkVie
         if (link.cid == linkView.model.cid)
             continue;
           var targetCell = graph.getCell(link.attributes.target.id);
-          //if (targetCell.attributes.type !== targetType)
-              //return false; // We can only connect to multiple targets of the same type
+          if (targetCell.attributes.type !== targetType)
+              return false; // We can only connect to multiple targets of the same type
           if (targetCell == cellViewT.model)
               return false; // Already connected
       } 
     }
+
+    /*
+    if (cellViewS.model.attributes.type == 'dialogue.Branch')
+    {
+        if (cellViewT.model.attributes.type == 'dialogue.Choice')
+        {
+            var inBoundLinks = graph.getConnectedLinks(graph.getCell(cellViewS.model.id), { inbound: true });
+            do
+            {
+                if (inBoundLinks.length == 0)
+                    return false;
+                var inbound = inBoundLinks[0];
+                if (!inbound.attributes.source)
+                    return false;
+                var inboundId = inbound.attributes.source.id;
+                var inboundCell = graph.getCell(inboundId);
+                var inboundCellType = inboundCell.attributes.type;
+                if (inboundCellType == 'dialogue.Text')
+                    return true;
+                else if (inboundCellType == 'dialogue.Branch')
+                    inBoundLinks = graph.getConnectedLinks(inboundCell, { inbound: true });
+                else
+                    return false;
+            }
+            while (inBoundLinks);
+        }
+        else if (cellViewT.model.attributes.type != 'dialogue.Choice' && cellViewT.model.attributes.type != 'dialogue.Branch')
+        {
+            var inBoundLinks = graph.getConnectedLinks(graph.getCell(cellViewS.model.id), { inbound: true });
+            do
+            {
+                if (inBoundLinks.length == 0)
+                    return false;
+                var inbound = inBoundLinks[0];
+                if (!inbound.attributes.source)
+                    return false;
+                var inboundId = inbound.attributes.source.id;
+                var inboundCell = graph.getCell(inboundId);
+                var inboundCellType = inboundCell.attributes.type;
+                if (inboundCellType == 'dialogue.Choice')
+                    return true;
+                else if (inboundCellType == 'dialogue.Text')
+                    return false;
+                else
+                    inBoundLinks = graph.getConnectedLinks(inboundCell, { inbound: true });
+            }
+            while (inBoundLinks);
+        }
+    }*/
 
     return true;
 }
@@ -636,6 +687,11 @@ joint.shapes.dialogue.Branch = joint.shapes.devs.Model.extend(
             inPorts: ['input'],
             outPorts: ['output0'],
             values: [],
+            attrs:
+            {
+              
+                '.outPorts circle': { unlimitedConnections: ['dialogue.Choice'], }
+            },
         },
         joint.shapes.dialogue.Base.prototype.defaults
     ),
@@ -855,7 +911,17 @@ function gameData()
                         var sourceCell = cellsByID[source.id];
                         value = sourceCell.values[portNumber - 1];
                     }
-                    source.branches[value] = target ? target.id : null;
+
+                    if (target && target.type == 'Choice')
+                    {
+                        if (!source.branches[value])
+                            source.branches[value] = {};
+                        if (!source.branches[value].choices)
+                            source.branches[value].choices = [];
+                        source.branches[value].choices.push(target.id);
+                    }
+                    else
+                        source.branches[value] = target ? target.id : null;
                 }
                 else if ((source.type == 'Text' || source.type == 'Node') && target && target.type == 'Choice')
                 {
