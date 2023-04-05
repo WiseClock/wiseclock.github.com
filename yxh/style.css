@@ -1,0 +1,115 @@
+html, body
+{
+    margin: 0;
+    padding: 0;
+    font-family: "微软雅黑", "苹方", "黑体", sans-serif;
+}
+
+.wrapper
+{
+    max-width: 800px;
+    margin: auto;
+}
+
+img
+{
+    max-width: 800px;
+    display: block;
+    margin-left: auto;
+    margin-right: auto;
+}
+
+h1
+{
+    font-weight: normal;
+    font-size: 22px;
+    line-height: 1.5em;
+}
+
+h2
+{
+    font-size: 18px;
+    text-align: center;
+    border-left: 5px solid rgb(245, 213, 66);
+    border-bottom: 1px solid gray;
+    padding: 5px;
+    margin: 50px 100px;
+    color: gray;
+}
+
+.meta
+{
+    display: flex;
+    column-gap: 15px;
+    color: rgba(0, 0, 0, 0.3);
+    padding-bottom: 20px;
+}
+
+.link
+{
+    color: rgb(87, 107, 149);
+}
+
+p
+{
+    font-size: 18px;
+    margin-top: 40px;
+    margin-bottom: 40px;
+    line-height: 2em;
+}
+
+strong
+{
+    background-color: rgb(255, 251, 0);
+    padding: 3px;
+}
+
+footer
+{
+    background-color: #eee;
+    padding-top: 10px;
+    padding-bottom: 30px;
+}
+
+.list
+{
+    display: flex;
+    flex-direction: column;
+    border-radius: 3px;
+    background-color: white;
+}
+
+.list div
+{
+    padding: 10px 20px;
+    line-height: 2em;
+}
+
+.list span
+{
+    color: rgba(0, 0, 0, 0.3);
+    display: block;
+}
+
+.list hr
+{
+    margin-top: 15px;
+    opacity: 0.2;
+}
+
+.list .title
+{
+    padding: 10px 20px;
+}
+
+.list a
+{
+    color: black;
+    text-decoration: none;
+}
+
+input
+{
+    display: block;
+    width: 100%;
+}
